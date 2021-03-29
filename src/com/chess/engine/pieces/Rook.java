@@ -7,20 +7,16 @@ import com.chess.engine.board.Move;
 import com.chess.engine.board.Tile;
 import com.google.common.collect.ImmutableList;
 
-import static com.chess.engine.board.Move.*;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class Bishop extends Piece {
-
-    private static final int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {-9, -7, 7, 9};
-
-    Bishop(int piecePosition, Alliance pieceAlliance) {
+public class Rook extends Piece {
+    Rook(int piecePosition, Alliance pieceAlliance) {
         super(piecePosition, pieceAlliance);
     }
 
+    private static final int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {-8, -1, 1, 8};
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
 
@@ -30,9 +26,9 @@ public class Bishop extends Piece {
             int candidateDestinationCoordinate = this.piecePosition;
             while (BoardUtils.isValidTileCoordinate(candidateDestinationCoordinate)) {
                 if (isEighthColumnExclusion(
-                                candidateDestinationCoordinate, candidateCoordinateOffset)
+                        candidateDestinationCoordinate, candidateCoordinateOffset)
                         || isFirstColumnExclusion(
-                                candidateDestinationCoordinate, candidateCoordinateOffset)) {
+                        candidateDestinationCoordinate, candidateCoordinateOffset)) {
                     break;
                 }
                 candidateDestinationCoordinate += candidateCoordinateOffset;
@@ -40,13 +36,13 @@ public class Bishop extends Piece {
                     final Tile candidateDestinationTile =
                             board.getTile(candidateDestinationCoordinate);
                     if (!candidateDestinationTile.isTileOccupied()) {
-                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                        legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
                         final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                         final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
                             legalMoves.add(
-                                    new AttackMove(
+                                    new Move.AttackMove(
                                             board,
                                             this,
                                             candidateDestinationCoordinate,
@@ -63,12 +59,12 @@ public class Bishop extends Piece {
     private static boolean isFirstColumnExclusion(
             final int currentPosition, final int candidateOffset) {
         return BoardUtils.FIRST_COLUMN[currentPosition]
-                && (candidateOffset == -9 || candidateOffset == 7);
+                && (candidateOffset == -1);
     }
 
     private static boolean isEighthColumnExclusion(
             final int currentPosition, final int candidateOffset) {
         return BoardUtils.EIGHTH_COLUMN[currentPosition]
-                && (candidateOffset == -7 || candidateOffset == 9);
+                && (candidateOffset == 1);
     }
 }
