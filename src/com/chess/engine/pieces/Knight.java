@@ -15,7 +15,7 @@ public class Knight extends Piece {
 
     private static final int[] CANDIDATE_MOVE_COORDINATES = {-17, -15, -10, -7, 7, 10, 15, 17};
 
-    Knight(final int piecePosition, final Alliance pieceAlliance) {
+    public Knight(final Alliance pieceAlliance, final int piecePosition) {
         super(piecePosition, pieceAlliance);
     }
 

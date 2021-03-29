@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class Rook extends Piece {
-    Rook(int piecePosition, Alliance pieceAlliance) {
+    public Rook(final Alliance pieceAlliance, final int piecePosition) {
         super(piecePosition, pieceAlliance);
     }
 
