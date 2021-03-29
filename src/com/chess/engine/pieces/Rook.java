@@ -13,12 +13,7 @@ import java.util.List;
 
 public class Rook extends Piece {
     public Rook(final Alliance pieceAlliance, final int piecePosition) {
-        super(piecePosition, pieceAlliance);
-    }
-
-    @Override
-    public String toString() {
-        return PieceType.ROOK.toString();
+        super(PieceType.ROOK, piecePosition, pieceAlliance);
     }
 
     private static final int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {-8, -1, 1, 8};

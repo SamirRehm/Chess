@@ -17,13 +17,9 @@ public class Pawn extends Piece {
     private static final int[] CANDIDATE_MOVE_COORDINATE = {8, 16, 7, 9};
 
     public Pawn(final Alliance pieceAlliance, final int piecePosition) {
-        super(piecePosition, pieceAlliance);
+        super(PieceType.PAWN, piecePosition, pieceAlliance);
     }
 
-    @Override
-    public String toString() {
-        return PieceType.PAWN.toString();
-    }
 
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
