@@ -21,6 +21,11 @@ public class Pawn extends Piece {
     }
 
     @Override
+    public String toString() {
+        return PieceType.PAWN.toString();
+    }
+
+    @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
         final List<Move> legalMoves = new ArrayList<>();
 
@@ -58,10 +63,12 @@ public class Pawn extends Piece {
                                             && this.getPieceAlliance().isBlack())
                                     || (BoardUtils.FIRST_COLUMN[this.piecePosition]
                                             && this.pieceAlliance.isWhite())))) {
-                final Piece pieceOnCandidate =
-                        board.getTile(candidateDestinationCoordinate).getPiece();
-                if (this.pieceAlliance != pieceOnCandidate.getPieceAlliance()) {
-                    legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                if (board.getTile(candidateDestinationCoordinate).isTileOccupied()) {
+                    final Piece pieceOnCandidate =
+                            board.getTile(candidateDestinationCoordinate).getPiece();
+                    if (this.pieceAlliance != pieceOnCandidate.getPieceAlliance()) {
+                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                    }
                 }
             }
         }

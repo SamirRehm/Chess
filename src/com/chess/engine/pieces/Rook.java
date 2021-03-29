@@ -16,6 +16,11 @@ public class Rook extends Piece {
         super(piecePosition, pieceAlliance);
     }
 
+    @Override
+    public String toString() {
+        return PieceType.ROOK.toString();
+    }
+
     private static final int[] CANDIDATE_MOVE_VECTOR_COORDINATES = {-8, -1, 1, 8};
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {

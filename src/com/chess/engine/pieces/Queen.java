@@ -20,6 +20,11 @@ public class Queen extends Piece {
     }
 
     @Override
+    public String toString() {
+        return PieceType.QUEEN.toString();
+    }
+
+    @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
 
         final List<Move> legalMoves = new ArrayList<>();

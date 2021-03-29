@@ -20,6 +20,11 @@ public class Knight extends Piece {
     }
 
     @Override
+    public String toString() {
+        return PieceType.KNIGHT.toString();
+    }
+
+    @Override
     public List<Move> calculateLegalMoves(final Board board) {
         final List<Move> legalMoves = new ArrayList<>();
 
