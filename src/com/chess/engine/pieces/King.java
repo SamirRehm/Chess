@@ -55,6 +55,11 @@ public class King extends Piece {
         return ImmutableList.copyOf(legalMoves);
     }
 
+    @Override
+    public King movePiece(Move move) {
+        return new King(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+    }
+
     private static boolean isFirstColumnExclusion(
             final int currentPosition, final int canadidateOffset) {
         return BoardUtils.FIRST_COLUMN[currentPosition]
