@@ -26,7 +26,7 @@ public class King extends Piece {
     @Override
     public Collection<Move> calculateLegalMoves(Board board) {
 
-        final List<Move> legalMoves = new ArrayList<>();
+        final List<Move> legalMoves = new ArrayList<>(10);
 
         for (final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATE) {
             final int candidateDestinationCoordinate = this.piecePosition + currentCandidateOffset;
@@ -46,7 +46,7 @@ public class King extends Piece {
                     final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                     if (this.pieceAlliance != pieceAlliance) {
                         legalMoves.add(
-                                new Move.AttackMove(
+                                new Move.MajorAttackMove(
                                         board,
                                         this,
                                         candidateDestinationCoordinate,
@@ -61,7 +61,7 @@ public class King extends Piece {
 
     @Override
     public King movePiece(Move move) {
-        return new King(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+        return new King(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate(), false);
     }
 
     private static boolean isFirstColumnExclusion(

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Knight extends Piece {
 
-    private static final int[] CANDIDATE_MOVE_COORDINATES = {-17, -15, -10, -7, 7, 10, 15, 17};
+    private static final int[] CANDIDATE_MOVE_COORDINATES = {-17, -15, -10, -6, 6, 10, 15, 17};
 
     public Knight(final Alliance pieceAlliance, final int piecePosition) {
         super(PieceType.KNIGHT, piecePosition, pieceAlliance, true);
@@ -25,7 +25,7 @@ public class Knight extends Piece {
 
     @Override
     public List<Move> calculateLegalMoves(final Board board) {
-        final List<Move> legalMoves = new ArrayList<>();
+        final List<Move> legalMoves = new ArrayList<>(8);
 
         for (final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES) {
             int candidateDestinationCoordinate = this.piecePosition + currentCandidateOffset;
@@ -46,7 +46,7 @@ public class Knight extends Piece {
                     final Piece pieceAtDestination = candidateDestinationTile.getPiece();
                     final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                     if (this.pieceAlliance != pieceAlliance) {
-                        legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                        legalMoves.add(new MajorAttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                     }
                 }
             }
@@ -56,7 +56,7 @@ public class Knight extends Piece {
 
     @Override
     public Knight movePiece(Move move) {
-        return new Knight(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+        return new Knight(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate(), false);
     }
 
     private static boolean isFirstColumnExclusion(

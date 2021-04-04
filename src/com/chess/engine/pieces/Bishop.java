@@ -50,7 +50,7 @@ public class Bishop extends Piece {
                         final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
                             legalMoves.add(
-                                    new AttackMove(
+                                    new MajorAttackMove(
                                             board,
                                             this,
                                             candidateDestinationCoordinate,
@@ -66,7 +66,7 @@ public class Bishop extends Piece {
 
     @Override
     public Bishop movePiece(Move move) {
-        return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+        return new Bishop(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate(), false);
     }
 
     private static boolean isFirstColumnExclusion(

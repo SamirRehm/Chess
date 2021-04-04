@@ -32,6 +32,9 @@ public class Table {
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
     private final JFrame gameFrame;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
+    private final MoveLog moveLog;
     private final BoardPanel boardPanel;
     private Board chessBoard;
     private Tile sourceTile;
@@ -39,7 +42,7 @@ public class Table {
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
 
-    private static String defaultPiecesImagesPath = "art/simple/";
+    public static String defaultPiecesImagesPath = "art/simple/";
 
     private Color lightTileColor = Color.decode("#FFFACD");
     private Color darkTileColor = Color.decode("#593E1A");
@@ -52,11 +55,16 @@ public class Table {
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
         this.chessBoard = Board.createStandardBoard();
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
+        this.moveLog = new MoveLog();
         this.boardDirection = BoardDirection.NORMAL;
         this.highlightLegalMoves = false;
 
         this.boardPanel = new BoardPanel();
+        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
 
         this.gameFrame.setVisible(true);
     }
@@ -219,7 +227,7 @@ public class Table {
             addMouseListener(
                     new MouseListener() {
                         @Override
-                        public void mouseClicked(MouseEvent e) {
+                        public void mouseReleased(MouseEvent e) {
                             if (isRightMouseButton(e)) {
 
                                 sourceTile = null;
@@ -244,7 +252,7 @@ public class Table {
                                             chessBoard.getCurrentPlayer().makeMove(move);
                                     if (transition.getMoveStatus().isDone()) {
                                         chessBoard = transition.getBoard();
-                                        // TODO add to move log
+                                        moveLog.addMove(move);
                                     }
                                     sourceTile = null;
                                     destinationTile = null;
@@ -255,16 +263,18 @@ public class Table {
                             SwingUtilities.invokeLater(new Runnable() {
                                 @Override
                                 public void run() {
+                                    gameHistoryPanel.redo(chessBoard, moveLog);
+                                    takenPiecesPanel.redo(moveLog);
                                     boardPanel.drawBoard(chessBoard);
                                 }
                             });
                         }
 
                         @Override
-                        public void mousePressed(MouseEvent e) {}
+                        public void mouseClicked(MouseEvent e) {}
 
                         @Override
-                        public void mouseReleased(MouseEvent e) {}
+                        public void mousePressed(MouseEvent e) {}
 
                         @Override
                         public void mouseEntered(MouseEvent e) {}

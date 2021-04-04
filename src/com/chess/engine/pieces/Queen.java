@@ -26,7 +26,7 @@ public class Queen extends Piece {
     @Override
     public Collection<Move> calculateLegalMoves(final Board board) {
 
-        final List<Move> legalMoves = new ArrayList<>();
+        final List<Move> legalMoves = new ArrayList<>(32);
 
         for (final int candidateCoordinateOffset : CANDIDATE_MOVE_VECTOR_COORDINATES) {
             int candidateDestinationCoordinate = this.piecePosition;
@@ -48,7 +48,7 @@ public class Queen extends Piece {
                         final Alliance pieceAlliance = pieceAtDestination.getPieceAlliance();
                         if (this.pieceAlliance != pieceAlliance) {
                             legalMoves.add(
-                                    new Move.AttackMove(
+                                    new Move.MajorAttackMove(
                                             board,
                                             this,
                                             candidateDestinationCoordinate,
@@ -64,7 +64,7 @@ public class Queen extends Piece {
 
     @Override
     public Queen movePiece(Move move) {
-        return new Queen(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate());
+        return new Queen(move.getMovedPiece().getPieceAlliance(), move.getDestinationCoordinate(), false);
     }
 
     private static boolean isFirstColumnExclusion(
