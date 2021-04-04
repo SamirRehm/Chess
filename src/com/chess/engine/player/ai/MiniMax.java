@@ -7,7 +7,6 @@ import com.chess.engine.player.MoveTransition;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
 public class MiniMax implements MoveStrategy {
@@ -38,22 +37,13 @@ public class MiniMax implements MoveStrategy {
         ExecutorService executorService = Executors.newFixedThreadPool(8);
 
         List<Callable<Integer>> runners = new ArrayList<>();
-        List<Move> all_moves = new ArrayList<>(board.getCurrentPlayer().getLegalMoves());
-        for(final Move move : all_moves) {
+        List<Move> all_valid_moves = new ArrayList<>();
+        for(final Move move : board.getCurrentPlayer().getLegalMoves()) {
             final MoveTransition moveTransition = board.getCurrentPlayer().makeMove(move);
             if(moveTransition.getMoveStatus().isDone()) {
+                all_valid_moves.add(move);
                 MinMaxRunner minMaxRunner = new MinMaxRunner(moveTransition.getBoard());
                 runners.add(minMaxRunner);
-                /*currentValue = board.getCurrentPlayer().getAlliance().isWhite() ?
-                        min(moveTransition.getBoard(), depth - 1) :
-                        max(moveTransition.getBoard(), depth - 1);*/
-                /*if(board.getCurrentPlayer().getAlliance().isWhite() && currentValue >= highestSeenValue) {
-                    highestSeenValue = currentValue;
-                    bestMove = move;
-                } else if(board.getCurrentPlayer().getAlliance().isBlack() && currentValue <= lowestSeenValue) {
-                    lowestSeenValue = currentValue;
-                    bestMove = move;
-                }*/
             }
         }
         List<Future<Integer>> results = new ArrayList<>();
@@ -89,7 +79,7 @@ public class MiniMax implements MoveStrategy {
                             .getAsInt();
         }
         System.out.println("Done thinking, took time " + (int)(System.currentTimeMillis() - startTime));
-        return all_moves.get(index);
+        return all_valid_moves.get(index);
     }
 
     public class MinMaxRunner implements Callable<Integer> {
