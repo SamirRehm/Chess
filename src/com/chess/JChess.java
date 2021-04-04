@@ -9,6 +9,6 @@ public class JChess {
         Board b = Board.createStandardBoard();
         System.out.println(b);
 
-        Table table = new Table();
+        Table.get().show();
     }
 }
