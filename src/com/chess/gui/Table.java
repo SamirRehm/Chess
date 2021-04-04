@@ -227,7 +227,7 @@ public class Table extends Observable {
 
         @Override
         protected Move doInBackground() throws Exception {
-            final MoveStrategy miniMax = new MiniMax(4);
+            final MoveStrategy miniMax = new MiniMax(6);
             final Move bestMove = miniMax.execute(Table.get().getGameBoard());
             return bestMove;
         }
@@ -358,51 +358,53 @@ public class Table extends Observable {
                     new MouseListener() {
                         @Override
                         public void mouseReleased(MouseEvent e) {
-                            if (isRightMouseButton(e)) {
+                            if (!Table.get()
+                                    .getGameSetup()
+                                    .isAIPlayer(chessBoard.getCurrentPlayer())) {
+                                if (isRightMouseButton(e)) {
 
-                                sourceTile = null;
-                                destinationTile = null;
-                                humanMovedPiece = null;
-
-                            } else if (isLeftMouseButton(e)) {
-                                if (sourceTile == null) {
-                                    sourceTile = chessBoard.getTile(tileId);
-                                    humanMovedPiece = sourceTile.getPiece();
-                                    if (humanMovedPiece == null) {
-                                        sourceTile = null;
-                                    }
-                                } else {
-                                    destinationTile = chessBoard.getTile(tileId);
-                                    final Move move =
-                                            Move.MoveFactory.createMove(
-                                                    chessBoard,
-                                                    sourceTile.getTileCoordinate(),
-                                                    destinationTile.getTileCoordinate());
-                                    final MoveTransition transition =
-                                            chessBoard.getCurrentPlayer().makeMove(move);
-                                    if (transition.getMoveStatus().isDone()) {
-                                        chessBoard = transition.getBoard();
-                                        moveLog.addMove(move);
-                                    }
                                     sourceTile = null;
                                     destinationTile = null;
                                     humanMovedPiece = null;
-                                }
 
-                            }
-                            SwingUtilities.invokeLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    gameHistoryPanel.redo(chessBoard, moveLog);
-                                    takenPiecesPanel.redo(moveLog);
-
-                                    if(gameSetup.isAIPlayer(chessBoard.getCurrentPlayer())) {
-                                        Table.get().moveMadeUpdate(PlayerType.HUMAN);
+                                } else if (isLeftMouseButton(e)) {
+                                    if (sourceTile == null) {
+                                        sourceTile = chessBoard.getTile(tileId);
+                                        humanMovedPiece = sourceTile.getPiece();
+                                        if (humanMovedPiece == null) {
+                                            sourceTile = null;
+                                        }
+                                    } else {
+                                        destinationTile = chessBoard.getTile(tileId);
+                                        final Move move =
+                                                Move.MoveFactory.createMove(
+                                                        chessBoard,
+                                                        sourceTile.getTileCoordinate(),
+                                                        destinationTile.getTileCoordinate());
+                                        final MoveTransition transition =
+                                                chessBoard.getCurrentPlayer().makeMove(move);
+                                        if (transition.getMoveStatus().isDone()) {
+                                            chessBoard = transition.getBoard();
+                                            moveLog.addMove(move);
+                                        }
+                                        sourceTile = null;
+                                        destinationTile = null;
+                                        humanMovedPiece = null;
                                     }
-
-                                    boardPanel.drawBoard(chessBoard);
                                 }
-                            });
+                                SwingUtilities.invokeLater(
+                                        () -> {
+                                            gameHistoryPanel.redo(chessBoard, moveLog);
+                                            takenPiecesPanel.redo(moveLog);
+
+                                            if (gameSetup.isAIPlayer(
+                                                    chessBoard.getCurrentPlayer())) {
+                                                Table.get().moveMadeUpdate(PlayerType.HUMAN);
+                                            }
+
+                                            boardPanel.drawBoard(chessBoard);
+                                        });
+                            }
                         }
 
                         @Override
